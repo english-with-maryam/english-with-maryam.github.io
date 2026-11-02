@@ -502,3 +502,15 @@ body:has(.section--contact) .footer a { color: rgba(255, 255, 255, .8); }
 .mailpick__menu button { border-top: 1px solid var(--line); border-radius: 0 0 10px 10px; }
 .contact__mail { background: none; border: 0; padding: 0; cursor: copy; font: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .copied { color: #8fd6b0 !important; }
+
+/* Галереи в статьях */
+.gallery .gallery__row { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 10px; }
+.gallery:not(.wide) { max-width: 620px; margin-inline: auto; }
+.gallery .gallery__row img { width: 100%; aspect-ratio: var(--ar); object-fit: cover; border-radius: var(--radius-sm); }
+@media (max-width: 600px) {
+  .gallery .gallery__row {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 72%;
+    overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px;
+  }
+  .gallery .gallery__row img { scroll-snap-align: start; }
+}
