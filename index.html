@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=202611021445">
+  <link rel="stylesheet" href="/css/style.css?v=20261102144700">
 
   <script type="application/ld+json">
   {
@@ -261,11 +261,20 @@
             <p>По вопросам занятий во&nbsp;Дворце детского и&nbsp;юношеского творчества, методических материалов или сотрудничества — напишите мне на&nbsp;почту.</p>
           </div>
           <div class="contact__links">
-            <a class="btn btn--primary" href="mailto:maryamibrag@gmail.com">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-              Написать на почту
-            </a>
-            <a class="contact__mail" href="mailto:maryamibrag@gmail.com">maryamibrag@gmail.com</a>
+            <details class="mailpick">
+              <summary class="btn btn--primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                Написать на почту
+              </summary>
+              <div class="mailpick__menu">
+                <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=maryamibrag@gmail.com" target="_blank" rel="noopener">Открыть в Gmail</a>
+                <a href="https://mail.yandex.ru/compose?to=maryamibrag@gmail.com" target="_blank" rel="noopener">Открыть в Яндекс Почте</a>
+                <a href="https://e.mail.ru/compose/?to=maryamibrag@gmail.com" target="_blank" rel="noopener">Открыть в Почте Mail.ru</a>
+                <a href="mailto:maryamibrag@gmail.com">Почтовая программа на устройстве</a>
+                <button type="button" data-copy="maryamibrag@gmail.com">Скопировать адрес</button>
+              </div>
+            </details>
+            <button class="contact__mail" type="button" data-copy="maryamibrag@gmail.com" title="Нажмите, чтобы скопировать">maryamibrag@gmail.com</button>
           </div>
         </div>
       </div>
@@ -289,6 +298,6 @@
     <p class="lightbox__cap"></p>
   </dialog>
 
-  <script src="/js/main.js?v=202611021445" defer></script>
+  <script src="/js/main.js?v=20261102144700" defer></script>
 </body>
 </html>

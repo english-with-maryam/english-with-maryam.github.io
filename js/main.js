@@ -38,3 +38,27 @@ if (footer && document.querySelector('.section--contact')) {
   setFooterH();
   new ResizeObserver(setFooterH).observe(footer);
 }
+
+// Копирование адреса почты
+document.querySelectorAll('[data-copy]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const text = btn.dataset.copy;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const t = document.createElement('textarea');
+      t.value = text; document.body.append(t); t.select(); document.execCommand('copy'); t.remove();
+    }
+    const label = btn.textContent;
+    btn.textContent = 'Адрес скопирован ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = label; btn.classList.remove('copied'); }, 2000);
+  });
+});
+
+// Меню почты закрывается по клику мимо и по Esc
+const mailpick = document.querySelector('.mailpick');
+if (mailpick) {
+  document.addEventListener('click', (e) => { if (!mailpick.contains(e.target)) mailpick.open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') mailpick.open = false; });
+}
