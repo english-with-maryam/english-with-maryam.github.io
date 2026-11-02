@@ -132,7 +132,31 @@ p { margin: 0 0 1em; }
 
 /* ---------- Первый экран ---------- */
 
-.hero { padding: clamp(40px, 7vw, 88px) 0 clamp(48px, 7vw, 96px); }
+.hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding: clamp(40px, 7vw, 88px) 0 clamp(48px, 7vw, 96px);
+  background:
+    radial-gradient(520px 420px at 88% 18%, rgba(217, 96, 59, .20), transparent 70%),
+    radial-gradient(560px 460px at 6% 92%, rgba(68, 110, 190, .14), transparent 70%),
+    linear-gradient(180deg, #fdf3ea 0%, var(--paper) 100%);
+}
+/* Тетрадная линовка с полями, плавно исчезающая к краям */
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 calc(max(16px, (100% - var(--wrap)) / 2) - 28px), rgba(217, 96, 59, .35) 0 calc(max(16px, (100% - var(--wrap)) / 2) - 26px), transparent 0),
+    repeating-linear-gradient(180deg, transparent 0 35px, rgba(68, 110, 190, .13) 35px 36px);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+}
+/* Декоративные буквы */
+.hero::after {
+  content: "Aa"; position: absolute; z-index: -1; pointer-events: none;
+  right: max(16px, (100% - var(--wrap)) / 2 - 40px); bottom: -.22em;
+  font: italic 600 clamp(140px, 20vw, 280px)/1 var(--font-head);
+  color: rgba(217, 96, 59, .07);
+}
+@media (max-width: 820px) { .hero::after { display: none; } }
 .hero__grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
 .eyebrow {
   display: inline-block; margin-bottom: 18px;
@@ -151,13 +175,21 @@ p { margin: 0 0 1em; }
 }
 
 .quote {
-  margin: 36px 0 0; padding: 18px 22px;
-  background: var(--card); border-left: 4px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  box-shadow: var(--shadow); max-width: 34em;
+  position: relative;
+  margin: 40px 0 0; padding: 22px 24px 20px 64px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-soft) 100%);
+  border: 1px solid rgba(217, 96, 59, .25); border-left: 5px solid var(--accent);
+  border-radius: 6px var(--radius) var(--radius) 6px;
+  box-shadow: 0 10px 30px rgba(217, 96, 59, .16);
+  max-width: 34em;
 }
-.quote p { margin: 0; font: italic 500 1.1rem/1.5 var(--font-head); }
-.quote p + p { margin-top: 4px; font: 400 .95rem/1.5 var(--font-body); font-style: normal; color: var(--ink-soft); }
-.quote cite { display: block; margin-top: 8px; font-style: normal; font-size: .9rem; color: var(--muted); }
+.quote::before {
+  content: "“"; position: absolute; left: 16px; top: 4px;
+  font: 700 64px/1 var(--font-head); color: var(--accent);
+}
+.quote p { margin: 0; font: italic 600 1.2rem/1.45 var(--font-head); color: var(--ink); }
+.quote p + p { margin-top: 6px; font: 500 .98rem/1.5 var(--font-body); font-style: normal; color: var(--ink-soft); }
+.quote cite { display: block; margin-top: 10px; font: 700 .82rem/1 var(--font-body); font-style: normal; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
 
 @media (max-width: 820px) {
   .hero__grid { grid-template-columns: 1fr; }
@@ -280,7 +312,6 @@ p { margin: 0 0 1em; }
 .article__head { margin-bottom: 32px; }
 .article__head h1 { font-size: clamp(2rem, 5vw, 2.9rem); }
 .article__lead { font-size: 1.18rem; color: var(--ink-soft); }
-.article__meta { font-size: .92rem; color: var(--muted); }
 .article h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 2em; }
 .article h3 { margin-top: 1.6em; }
 .article ul, .article ol { padding-left: 1.3em; margin: 0 0 1.2em; }
@@ -337,3 +368,21 @@ p { margin: 0 0 1em; }
   .step { display: block; }
   .step__n { display: grid; margin: 0 0 10px; }
 }
+
+/* Контакты — последний блок: делаем его высотой с экран, чтобы прокрутка из меню
+   ставила его под шапку так же, как остальные секции */
+.section--contact {
+  background: var(--ink); color: #fff;
+  min-height: calc(100svh - 64px);
+  display: flex; flex-direction: column;
+}
+.section--contact > .wrap:last-child { margin-top: auto; }
+.signoff {
+  padding-top: 48px;
+  font: italic 600 clamp(2.4rem, 8vw, 6.5rem)/1.05 var(--font-head);
+  color: rgba(255, 255, 255, .09); letter-spacing: -.02em;
+}
+.signoff span { color: rgba(217, 96, 59, .55); }
+body:has(.section--contact) .footer { background: var(--ink); color: rgba(255, 255, 255, .55); border-top-color: rgba(255, 255, 255, .1); }
+.section--contact .eyebrow { color: #f3a585; }
+.section--contact .contact { background: transparent; padding: 0; border-radius: 0; }
