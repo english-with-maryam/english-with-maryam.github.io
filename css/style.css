@@ -315,7 +315,6 @@ p { margin: 0 0 1em; }
 .article figure { margin: 32px 0; }
 .article figure img { border-radius: var(--radius); width: 100%; }
 .article figcaption { font-size: .9rem; color: var(--muted); margin-top: 10px; text-align: center; }
-.article .wide { width: min(100vw - 32px, 960px); margin-left: 50%; transform: translateX(-50%); }
 
 .en { font-weight: 700; color: var(--ink); }
 
@@ -505,7 +504,6 @@ body:has(.section--contact) .footer a { color: rgba(255, 255, 255, .8); }
 
 /* Галереи в статьях */
 .gallery .gallery__row { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 10px; }
-.gallery:not(.wide) { max-width: 620px; margin-inline: auto; }
 .gallery .gallery__row img { width: 100%; aspect-ratio: var(--ar); object-fit: cover; border-radius: var(--radius-sm); }
 @media (max-width: 600px) {
   .gallery .gallery__row {
