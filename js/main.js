@@ -30,3 +30,11 @@ if (box) {
   box.querySelector('.lightbox__close').addEventListener('click', () => box.close());
   box.addEventListener('click', (e) => { if (e.target === box) box.close(); });
 }
+
+// Высота подвала — чтобы блок контактов вместе с подвалом занимал один экран
+const footer = document.querySelector('.footer');
+if (footer && document.querySelector('.section--contact')) {
+  const setFooterH = () => document.documentElement.style.setProperty('--footer-h', footer.offsetHeight + 'px');
+  setFooterH();
+  new ResizeObserver(setFooterH).observe(footer);
+}

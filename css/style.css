@@ -368,12 +368,14 @@ p { margin: 0 0 1em; }
    ставила его под шапку так же, как остальные секции */
 .section--contact {
   background: var(--ink); color: #fff;
-  min-height: calc(100svh - 64px);
+  /* контакты + подвал = ровно один экран под шапкой; высоту подвала подставляет main.js */
+  min-height: calc(100svh - 64px - var(--footer-h, 140px));
+  padding-top: 32px; padding-bottom: 32px;
   display: flex; flex-direction: column;
 }
 .section--contact > .wrap:last-child { margin-top: auto; }
 .signoff {
-  padding-top: 48px;
+  padding-top: 32px; margin: 0;
   font: italic 600 clamp(2.4rem, 8vw, 6.5rem)/1.05 var(--font-head);
   color: rgba(255, 255, 255, .09); letter-spacing: -.02em;
 }
