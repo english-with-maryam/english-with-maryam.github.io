@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="ДДЮТ">
+  <circle cx="60" cy="60" r="60" fill="#f08a3c"/>
+  <circle cx="60" cy="60" r="52" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2"/>
+  <text x="60" y="68" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="1" fill="#fff">ДДЮТ</text>
+</svg>
