@@ -67,11 +67,32 @@ const publishTime = (d) => {
   return Date.parse(/(Z|[+-]\d\d:?\d\d)$/.test(s) ? s : `${s.length === 16 ? s + ':00' : s}${TZ}`) || 0;
 };
 
+// Адрес статьи, если поле URL пустое: транслит имени файла.
+// Имя файла админка задаёт из названия при создании и потом не меняет, поэтому адрес стабилен.
+const TRANSLIT = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'j', к: 'k', л: 'l',
+  м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh',
+  щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+const toUrl = (s) => {
+  const url = String(s).toLowerCase().replace(/[а-яё]/g, (c) => TRANSLIT[c])
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return url.length > 70 ? url.slice(0, 70).replace(/-[^-]*$/, '') : url;
+};
+
 // Статьи с датой в будущем ждут своего часа: их подхватит сборка по расписанию
+const used = new Set();
 const all = fs.readdirSync(path.join(ROOT, 'content/articles'))
   .filter((f) => f.endsWith('.json'))
-  .map((f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'content/articles', f), 'utf8')))
-  .filter((a) => !a.draft && a.url && a.title);
+  .sort()
+  .map((f) => {
+    const a = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/articles', f), 'utf8'));
+    let url = toUrl(a.url || f.replace(/\.json$/, '')) || 'article';
+    for (let n = 2; used.has(url); n++) url = `${toUrl(a.url || f.replace(/\.json$/, ''))}-${n}`;
+    used.add(url);
+    return { ...a, url };
+  })
+  .filter((a) => !a.draft && a.title);
 const articles = all
   .filter((a) => publishTime(a.date) <= Date.now())
   .sort((a, b) => publishTime(b.date) - publishTime(a.date));

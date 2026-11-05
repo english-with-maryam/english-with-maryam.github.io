@@ -37,11 +37,13 @@ collections:
     extension: json
     create: true
     delete: true
-    slug: "{{fields.url}}"
+    # Имя файла статьи = название на момент создания; из него сборка делает адрес, если URL пустой
+    slug:
+      template: "{{title}}"
+      editable: false
     identifier_field: title
     summary: "{{title}} · {{date}}"
     sortable_fields: [date, title]
-    preview_path: "materialy/{{fields.url}}/"
     fields:
       - label: Title
         name: title
@@ -57,8 +59,9 @@ collections:
       - label: Page address (URL)
         name: url
         widget: string
+        required: false
         pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Use only lowercase Latin letters, digits and hyphens, e.g. present-perfect-for-kids']
-        hint: "The article will be at english-with-maryam.github.io/materialy/<this>/. Latin letters and hyphens only. Don't change it after publishing — old links would break."
+        hint: "Optional. Leave empty and the address is made from the title automatically (in Latin letters), e.g. «Как учить слова» → /materialy/kak-uchit-slova/. It stays the same even if you change the title later. Fill it in only if you want a different address. Don't change it after publishing — old links would break."
 
       - label: Category
         name: category
