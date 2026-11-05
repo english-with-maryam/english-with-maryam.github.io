@@ -1,0 +1,102 @@
+{
+  "title": "Title test long",
+  "short_title": "Title test short",
+  "url": "title-test-short",
+  "category": "Практические советы",
+  "date": "2026-11-05T18:00",
+  "draft": true,
+  "summary": "Title test shortTitle test shortTitle test short. Title test shortTitle test shortTitle test short.",
+  "lead": "Intro paragraph",
+  "cover": "/img/uploads/снимок-экрана-—-2026-11-05-в-17.20.48.webp",
+  "cover_alt": "test",
+  "seo_title": "",
+  "seo_description": "",
+  "blocks": [
+    {
+      "type": "heading",
+      "text": "Heading"
+    },
+    {
+      "type": "text",
+      "body": "text"
+    },
+    {
+      "type": "step",
+      "body": "step text 1",
+      "title": "step title 1"
+    },
+    {
+      "type": "step",
+      "body": "step text 2",
+      "title": "step title 2"
+    },
+    {
+      "type": "image",
+      "src": "https://picsum.photos/id/260/1280/1920.webp",
+      "alt": "im desc 1",
+      "caption": "",
+      "shape": "original"
+    },
+    {
+      "type": "gallery",
+      "caption": "",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/975/1920/1280.webp",
+          "alt": "im desc 2"
+        },
+        {
+          "src": "https://picsum.photos/id/329/1920/1280.webp",
+          "alt": "im desc 3"
+        },
+        {
+          "src": "https://picsum.photos/id/923/1920/1280.webp",
+          "alt": "im desc 4"
+        },
+        {
+          "src": "https://picsum.photos/id/50/1920/1280.webp",
+          "alt": "im desc 5"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "numbered": true,
+      "items": [
+        "number 1",
+        "number 2"
+      ]
+    },
+    {
+      "type": "list",
+      "numbered": false,
+      "items": [
+        "not number 1",
+        "not number 2"
+      ]
+    },
+    {
+      "type": "examples",
+      "items": [
+        {
+          "en": "english",
+          "ru": "русский"
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "pairs": [
+        {
+          "wrong": "wrong",
+          "right": "right"
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "body": "main rule text (not optional)",
+      "title": "main rule (optional)"
+    }
+  ]
+}
