@@ -39,7 +39,7 @@ collections:
     delete: true
     slug: "{{fields.url}}"
     identifier_field: title
-    summary: "{{title}}"
+    summary: "{{title}} · {{date}}"
     sortable_fields: [date, title]
     preview_path: "materialy/{{fields.url}}/"
     fields:
@@ -66,12 +66,12 @@ collections:
         options: [Грамматика, Лексика, Культура, Практические советы, Произношение, Чтение, Для родителей, Олимпиады и конкурсы, Другое]
         default: Практические советы
 
-      - label: Date
+      - label: Publish date and time
         name: date
         widget: datetime
         format: "YYYY-MM-DDTHH:mm"
         default: "{{now}}"
-        hint: Newer articles appear first. The three newest are also shown on the home page.
+        hint: "Tolyatti time. Set a future date and time to schedule the article: it will appear on the site automatically within about 30 minutes after that time. Newer articles appear first; the three newest are also shown on the home page."
 
       - label: Hide from the site (draft)
         name: draft

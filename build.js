@@ -59,11 +59,23 @@ const bust = (html) => html
 
 // ---------- статьи ----------
 
-const articles = fs.readdirSync(path.join(ROOT, 'content/articles'))
+// Дата из админки без часового пояса — это время Тольятти (UTC+4)
+const TZ = '+04:00';
+const publishTime = (d) => {
+  if (!d) return 0;
+  const s = String(d);
+  return Date.parse(/(Z|[+-]\d\d:?\d\d)$/.test(s) ? s : `${s.length === 16 ? s + ':00' : s}${TZ}`) || 0;
+};
+
+// Статьи с датой в будущем ждут своего часа: их подхватит сборка по расписанию
+const all = fs.readdirSync(path.join(ROOT, 'content/articles'))
   .filter((f) => f.endsWith('.json'))
   .map((f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'content/articles', f), 'utf8')))
-  .filter((a) => !a.draft && a.url && a.title)
-  .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  .filter((a) => !a.draft && a.url && a.title);
+const articles = all
+  .filter((a) => publishTime(a.date) <= Date.now())
+  .sort((a, b) => publishTime(b.date) - publishTime(a.date));
+const scheduled = all.filter((a) => publishTime(a.date) > Date.now());
 
 const firstImage = (a) => {
   for (const b of a.blocks || []) {
@@ -323,3 +335,4 @@ ${urls.map(([u, d]) => `  <url><loc>${SITE}${u}</loc><lastmod>${d}</lastmod></ur
 }
 
 console.log(`Готово: ${articles.length} статей → _site/`);
+for (const a of scheduled) console.log(`Запланирована: ${a.url} на ${a.date} (Тольятти)`);

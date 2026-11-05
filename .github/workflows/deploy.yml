@@ -5,6 +5,9 @@ name: Build and deploy
 on:
   push:
     branches: [main]
+  # Каждые 30 минут: публикует статьи, у которых наступила дата публикации
+  schedule:
+    - cron: '7,37 * * * *'
   workflow_dispatch:
 
 permissions:
