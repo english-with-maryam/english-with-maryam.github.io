@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import { imageSize } from 'image-size';
+import { esc, typoText, createRenderer } from './js/article.js';
 
 const SITE = 'https://english-with-maryam.github.io';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -17,18 +18,6 @@ marked.use({ breaks: true });
 
 // ---------- утилиты ----------
 
-const esc = (s = '') => String(s)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-// Неразрывный пробел после коротких русских слов, только в тексте (не внутри тегов)
-const SHORT = 'в|во|и|с|со|к|ко|о|об|у|а|не|ни|но|на|по|за|из|от|до|для|без|при|про|их|же|бы|ли|я|мы|он|то';
-const shortRe = new RegExp(`(^|[\\s(«„"—])(${SHORT})\\s+(?=\\S)`, 'gi');
-const typo = (html) => html.replace(/>([^<]+)</g, (m, text) => '>' + text.replace(shortRe, '$1$2 ') + '<');
-const typoText = (s) => typo('>' + s + '<').slice(1, -1);
-
-const md = (s = '') => typo(marked.parse(String(s).trim()));
-const mdInline = (s = '') => typo('>' + marked.parseInline(String(s).trim()) + '<').slice(1, -1);
-
 const dims = (src) => {
   try {
     const { width, height } = imageSize(fs.readFileSync(path.join(ROOT, src.replace(/^\//, ''))));
@@ -36,7 +25,9 @@ const dims = (src) => {
   } catch { return ''; }
 };
 
-const imgTag = (src, alt, extra = '') => `<img src="${esc(src)}"${dims(src)} alt="${esc(alt)}"${extra}>`;
+const { imgTag, article } = createRenderer({
+  parse: (x) => marked.parse(x), parseInline: (x) => marked.parseInline(x), dims,
+});
 
 const copy = (from, to) => {
   if (!fs.existsSync(from)) return;
@@ -108,65 +99,6 @@ const firstImage = (a) => {
 const coverOf = (a) => (a.cover ? { src: a.cover, alt: a.cover_alt || a.title } : firstImage(a));
 const shortTitle = (a) => a.short_title || a.title;
 const href = (a) => `/materialy/${a.url}/`;
-
-// Одиночные блоки, которые после «шага» уходят внутрь него
-const STEP_CHILDREN = new Set(['text', 'list', 'examples', 'compare', 'callout']);
-
-function block(b) {
-  switch (b.type) {
-    case 'heading':
-      return `<h2>${typoText(esc(b.text))}</h2>`;
-    case 'text':
-      return md(b.body);
-    case 'image': {
-      if (!b.src) return '';
-      const shape = { landscape: '3 / 2', wide: '16 / 9' }[b.shape];
-      const style = shape ? ` style="aspect-ratio:${shape};object-fit:cover"` : '';
-      const cap = b.caption ? `\n        <figcaption>${mdInline(b.caption)}</figcaption>` : '';
-      return `<figure>\n        ${imgTag(b.src, b.alt || b.caption || '', ` loading="lazy"${style}`)}${cap}\n      </figure>`;
-    }
-    case 'gallery': {
-      const imgs = (b.images || []).filter((i) => i.src);
-      if (!imgs.length) return '';
-      const n = Math.min(imgs.length, 4);
-      const ar = n === 2 ? '2 / 3' : '3 / 4';
-      const cap = b.caption ? `\n        <figcaption>${mdInline(b.caption)}</figcaption>` : '';
-      return `<figure class="gallery" style="--n:${n};--ar:${ar}">\n        <div class="gallery__row">\n${imgs
-        .map((i) => `          ${imgTag(i.src, i.alt || b.caption || '', ' loading="lazy"')}`).join('\n')}\n        </div>${cap}\n      </figure>`;
-    }
-    case 'list': {
-      const tag = b.numbered ? 'ol' : 'ul';
-      return `<${tag}>\n${(b.items || []).filter(Boolean).map((i) => `        <li>${mdInline(i)}</li>`).join('\n')}\n      </${tag}>`;
-    }
-    case 'examples':
-      return `<ul class="examples">\n${(b.items || []).map((i) =>
-        `        <li><span class="en" lang="en">${esc(i.en)}</span><span>${typoText(esc(i.ru || ''))}</span></li>`).join('\n')}\n      </ul>`;
-    case 'compare':
-      return `<div class="compare" lang="en">\n${(b.pairs || []).map((p) =>
-        `        <div class="bad">${esc(p.wrong)}</div><div class="good">${esc(p.right)}</div>`).join('\n')}\n      </div>`;
-    case 'callout': {
-      const title = b.title ? `\n        <span class="callout__title">${esc(b.title)}</span>` : '';
-      return `<div class="callout">${title}\n        ${md(b.body)}\n      </div>`;
-    }
-    default:
-      return '';
-  }
-}
-
-function body(blocks = []) {
-  const out = [];
-  let n = 0;
-  for (let i = 0; i < blocks.length; i++) {
-    const b = blocks[i];
-    if (b.type !== 'step') { out.push('      ' + block(b)); continue; }
-    n += 1;
-    const inner = [`<h2>${typoText(esc(b.title))}</h2>`];
-    if (b.body) inner.push(md(b.body));
-    while (blocks[i + 1] && STEP_CHILDREN.has(blocks[i + 1].type)) inner.push(block(blocks[++i]));
-    out.push(`      <div class="step">\n        <span class="step__n">${n}</span>\n        <div>\n          ${inner.join('\n          ')}\n        </div>\n      </div>`);
-  }
-  return out.join('\n\n');
-}
 
 // ---------- общие части страниц ----------
 
@@ -287,13 +219,7 @@ for (const a of articles) {
   <main id="main">
 ${crumbs(bc)}
 
-    <article class="article">
-      <header class="article__head">
-        <span class="eyebrow">${esc(a.category || 'Материалы')}</span>
-        <h1>${typoText(esc(a.title))}</h1>${a.lead ? `\n        <p class="article__lead">${typoText(esc(a.lead))}</p>` : ''}
-      </header>
-
-${body(a.blocks)}
+    <article class="article">${article(a)}
 ${more.length ? `
       <aside class="more">
         <h2>Читайте также</h2>
