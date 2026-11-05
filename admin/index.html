@@ -9,6 +9,14 @@
 </head>
 <body>
   <!-- Админка сайта: Sveltia CMS, настройки в admin/config.yml -->
+  <script>
+    // Светлая тема по умолчанию; выбор в меню аккаунта → Settings → Appearance сохраняется
+    try {
+      const key = 'sveltia-cms.prefs';
+      const prefs = JSON.parse(localStorage.getItem(key) || '{}') || {};
+      if (!prefs.theme) localStorage.setItem(key, JSON.stringify({ ...prefs, theme: 'light' }));
+    } catch {}
+  </script>
   <script src="https://unpkg.com/@sveltia/cms@0.259.0/dist/sveltia-cms.js"></script>
 </body>
 </html>
