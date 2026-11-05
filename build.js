@@ -123,7 +123,7 @@ function block(b) {
       const shape = { landscape: '3 / 2', wide: '16 / 9' }[b.shape];
       const style = shape ? ` style="aspect-ratio:${shape};object-fit:cover"` : '';
       const cap = b.caption ? `\n        <figcaption>${mdInline(b.caption)}</figcaption>` : '';
-      return `<figure>\n        ${imgTag(b.src, b.alt, ` loading="lazy"${style}`)}${cap}\n      </figure>`;
+      return `<figure>\n        ${imgTag(b.src, b.alt || b.caption || '', ` loading="lazy"${style}`)}${cap}\n      </figure>`;
     }
     case 'gallery': {
       const imgs = (b.images || []).filter((i) => i.src);
@@ -132,7 +132,7 @@ function block(b) {
       const ar = n === 2 ? '2 / 3' : '3 / 4';
       const cap = b.caption ? `\n        <figcaption>${mdInline(b.caption)}</figcaption>` : '';
       return `<figure class="gallery" style="--n:${n};--ar:${ar}">\n        <div class="gallery__row">\n${imgs
-        .map((i) => `          ${imgTag(i.src, i.alt, ' loading="lazy"')}`).join('\n')}\n        </div>${cap}\n      </figure>`;
+        .map((i) => `          ${imgTag(i.src, i.alt || b.caption || '', ' loading="lazy"')}`).join('\n')}\n        </div>${cap}\n      </figure>`;
     }
     case 'list': {
       const tag = b.numbered ? 'ol' : 'ul';

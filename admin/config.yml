@@ -157,7 +157,7 @@ collections:
             summary: "Image: {{alt}}"
             fields:
               - { label: Image, name: src, widget: image }
-              - { label: Image description, name: alt, widget: string, hint: "What is in the picture, in Russian (for screen readers and search)." }
+              - { label: Image description, name: alt, widget: string, required: false, hint: "Optional. What is in the picture, in Russian (for screen readers and search)." }
               - { label: Caption, name: caption, widget: string, required: false, hint: Optional. Shown under the image. }
               - label: Shape
                 name: shape
@@ -181,7 +181,7 @@ collections:
                 max: 4
                 fields:
                   - { label: Image, name: src, widget: image }
-                  - { label: Image description, name: alt, widget: string }
+                  - { label: Image description, name: alt, widget: string, required: false, hint: Optional. }
               - { label: Caption, name: caption, widget: string, required: false }
 
           - label: List
