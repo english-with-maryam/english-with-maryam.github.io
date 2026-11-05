@@ -65,9 +65,13 @@ collections:
 
       - label: Category
         name: category
-        widget: select
-        options: [Грамматика, Лексика, Культура, Практические советы, Произношение, Чтение, Для родителей, Олимпиады и конкурсы, Другое]
-        default: Практические советы
+        widget: relation
+        collection: settings
+        file: categories
+        value_field: "categories.*.name"
+        search_fields: ["categories.*.name"]
+        display_fields: ["categories.*.name"]
+        hint: "Shown above the title and on the card. To add, rename or delete categories, go to Settings → Categories."
 
       - label: Publish date and time
         name: date
@@ -104,18 +108,6 @@ collections:
         widget: string
         required: false
         hint: What is in the card image, in Russian (for screen readers and search).
-
-      - label: Search title (SEO)
-        name: seo_title
-        widget: string
-        required: false
-        hint: Optional. Title for Google/Yandex. Leave empty to use the article title.
-
-      - label: Search description (SEO)
-        name: seo_description
-        widget: text
-        required: false
-        hint: Optional. Description for Google/Yandex. Leave empty to use the card text.
 
       - label: Article content
         name: blocks
@@ -242,3 +234,21 @@ collections:
                 modes: [rich_text]
                 buttons: [bold, italic, link, bulleted-list, numbered-list]
                 editor_components: []
+
+  - name: settings
+    label: Settings
+    description: Site-wide lists used by articles.
+    files:
+      - name: categories
+        label: Categories
+        file: content/settings/categories.json
+        format: json
+        fields:
+          - label: Categories
+            name: categories
+            label_singular: category
+            widget: list
+            min: 1
+            hint: "Add, rename, delete or drag to reorder. The order here is the order in the article's Category dropdown. Renaming or deleting a category doesn't change articles that already use it: open those articles and pick the new category."
+            fields:
+              - { label: Name, name: name, widget: string }
