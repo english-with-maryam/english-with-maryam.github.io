@@ -1,0 +1,12 @@
+{
+  "name": "english-with-maryam",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "image-size": "^2.0.2",
+    "marked": "^18.1.3"
+  }
+}

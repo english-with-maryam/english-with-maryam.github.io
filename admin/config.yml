@@ -1,0 +1,241 @@
+# Админка сайта (Sveltia CMS). Статьи хранятся в content/articles/*.json,
+# страницы из них собирает build.js при каждой публикации.
+
+app_title: My English Classroom · Admin
+logo:
+  src: /favicon.svg
+site_url: https://english-with-maryam.github.io
+display_url: https://english-with-maryam.github.io
+
+backend:
+  name: github
+  repo: english-with-maryam/english-with-maryam.github.io
+  branch: main
+  auth_methods: [token]
+
+media_folder: img/uploads
+public_folder: /img/uploads
+media_libraries:
+  default:
+    config:
+      max_file_size: 15000000
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 1800
+          height: 1800
+
+collections:
+  - name: articles
+    label: Articles
+    label_singular: Article
+    description: Articles shown in the «Материалы» section. The page appears on the site about a minute after you save.
+    folder: content/articles
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{fields.url}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    preview_path: "materialy/{{fields.url}}/"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+        hint: Full title shown at the top of the article.
+
+      - label: Short title
+        name: short_title
+        widget: string
+        required: false
+        hint: Optional. A shorter version for cards and breadcrumbs. Leave empty to use the full title.
+
+      - label: Page address (URL)
+        name: url
+        widget: string
+        pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Use only lowercase Latin letters, digits and hyphens, e.g. present-perfect-for-kids']
+        hint: "The article will be at english-with-maryam.github.io/materialy/<this>/. Latin letters and hyphens only. Don't change it after publishing — old links would break."
+
+      - label: Category
+        name: category
+        widget: select
+        options: [Грамматика, Лексика, Культура, Практические советы, Произношение, Чтение, Для родителей, Олимпиады и конкурсы, Другое]
+        default: Практические советы
+
+      - label: Date
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DDTHH:mm"
+        default: "{{now}}"
+        hint: Newer articles appear first. The three newest are also shown on the home page.
+
+      - label: Hide from the site (draft)
+        name: draft
+        widget: boolean
+        default: false
+        hint: Turn on to save the article without publishing it.
+
+      - label: Card text
+        name: summary
+        widget: text
+        hint: 1–2 short sentences shown on the article card on the home page and in «Материалы».
+
+      - label: Intro paragraph
+        name: lead
+        widget: text
+        required: false
+        hint: The larger first paragraph under the title.
+
+      - label: Card image
+        name: cover
+        widget: image
+        required: false
+        hint: Optional. Image for the article card and link previews. If empty, the first image of the article is used.
+
+      - label: Card image description
+        name: cover_alt
+        widget: string
+        required: false
+        hint: What is in the card image, in Russian (for screen readers and search).
+
+      - label: Search title (SEO)
+        name: seo_title
+        widget: string
+        required: false
+        hint: Optional. Title for Google/Yandex. Leave empty to use the article title.
+
+      - label: Search description (SEO)
+        name: seo_description
+        widget: text
+        required: false
+        hint: Optional. Description for Google/Yandex. Leave empty to use the card text.
+
+      - label: Article content
+        name: blocks
+        label_singular: block
+        widget: list
+        required: false
+        collapsed: true
+        hint: "Build the article from blocks. Add, reorder (drag) or delete any of them. Tip: start with an Image or Gallery right after the intro."
+        types:
+          - label: Heading
+            name: heading
+            widget: object
+            summary: "Heading: {{text}}"
+            fields:
+              - { label: Heading text, name: text, widget: string }
+
+          - label: Text
+            name: text
+            widget: object
+            summary: "Text: {{body | truncate(60)}}"
+            fields:
+              - label: Text
+                name: body
+                widget: markdown
+                modes: [rich_text]
+                buttons: [bold, italic, link, bulleted-list, numbered-list]
+                editor_components: []
+                hint: Use Bold to highlight English words in Russian text, e.g. apple.
+
+          - label: Numbered step
+            name: step
+            widget: object
+            summary: "Step: {{title}}"
+            fields:
+              - { label: Step title, name: title, widget: string, hint: "Numbers 1, 2, 3… are added automatically. Text, List, Examples, Wrong → Right and Highlight blocks placed right after a step are shown inside it." }
+              - label: Step text
+                name: body
+                widget: markdown
+                required: false
+                modes: [rich_text]
+                buttons: [bold, italic, link, bulleted-list, numbered-list]
+                editor_components: []
+
+          - label: Image
+            name: image
+            widget: object
+            summary: "Image: {{alt}}"
+            fields:
+              - { label: Image, name: src, widget: image }
+              - { label: Image description, name: alt, widget: string, hint: "What is in the picture, in Russian (for screen readers and search)." }
+              - { label: Caption, name: caption, widget: string, required: false, hint: Optional. Shown under the image. }
+              - label: Shape
+                name: shape
+                widget: select
+                default: original
+                options:
+                  - { label: Original proportions, value: original }
+                  - { label: "Landscape 3:2 (crop)", value: landscape }
+                  - { label: "Wide 16:9 (crop)", value: wide }
+
+          - label: Gallery (2–4 images in a row)
+            name: gallery
+            widget: object
+            summary: "Gallery: {{caption}}"
+            fields:
+              - label: Images
+                name: images
+                label_singular: image
+                widget: list
+                min: 2
+                max: 4
+                fields:
+                  - { label: Image, name: src, widget: image }
+                  - { label: Image description, name: alt, widget: string }
+              - { label: Caption, name: caption, widget: string, required: false }
+
+          - label: List
+            name: list
+            widget: object
+            summary: "List: {{items | truncate(60)}}"
+            fields:
+              - { label: Numbered list, name: numbered, widget: boolean, default: false }
+              - label: Items
+                name: items
+                label_singular: item
+                widget: list
+                field: { label: Item, name: item, widget: string }
+
+          - label: Examples (English — Russian)
+            name: examples
+            widget: object
+            summary: Examples
+            fields:
+              - label: Examples
+                name: items
+                label_singular: example
+                widget: list
+                fields:
+                  - { label: English, name: en, widget: string }
+                  - { label: Russian translation, name: ru, widget: string, required: false }
+
+          - label: "Wrong → Right"
+            name: compare
+            widget: object
+            summary: "Wrong → Right"
+            fields:
+              - label: Pairs
+                name: pairs
+                label_singular: pair
+                widget: list
+                fields:
+                  - { label: Wrong, name: wrong, widget: string, hint: "e.g. She happy." }
+                  - { label: Right, name: right, widget: string, hint: "e.g. She is happy." }
+
+          - label: Highlight box
+            name: callout
+            widget: object
+            summary: "Highlight: {{title}}"
+            fields:
+              - { label: Title, name: title, widget: string, required: false, hint: "Optional, e.g. «Главное правило», «Помните», «Пример»." }
+              - label: Text
+                name: body
+                widget: markdown
+                modes: [rich_text]
+                buttons: [bold, italic, link, bulleted-list, numbered-list]
+                editor_components: []

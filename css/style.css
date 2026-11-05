@@ -512,3 +512,6 @@ body:has(.section--contact) .footer a { color: rgba(255, 255, 255, .8); }
   }
   .gallery .gallery__row img { scroll-snap-align: start; }
 }
+
+/* Выделение в тексте статей (жирный из админки) */
+.article strong, .article b { font-weight: 700; color: var(--ink); }
