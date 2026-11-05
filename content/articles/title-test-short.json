@@ -7,10 +7,8 @@
   "draft": true,
   "summary": "Title test shortTitle test shortTitle test short. Title test shortTitle test shortTitle test short.",
   "lead": "Intro paragraph",
-  "cover": "/img/uploads/снимок-экрана-—-2026-11-05-в-17.20.48.webp",
+  "cover": "",
   "cover_alt": "test",
-  "seo_title": "",
-  "seo_description": "",
   "blocks": [
     {
       "type": "heading",
@@ -98,5 +96,7 @@
       "body": "main rule text (not optional)",
       "title": "main rule (optional)"
     }
-  ]
+  ],
+  "seo_description": "",
+  "seo_title": ""
 }
